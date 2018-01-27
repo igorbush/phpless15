@@ -16,7 +16,18 @@
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;';
 	$result = $dbh->query($query);
 
-	$show_tables='SHOW TABLES FROM `bushenev`';
+	$show_tables='SHOW TABLES';
+	//$sql = "SHOW TABLES";
+	$statement = $dbh->prepare($show_tables);
+	$statement->execute();
+	//$row = $statement->fetchall(PDO::FETCH_ASSOC);
+	//print_r($row);
+	//while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+	//foreach($row as $key => $value) {
+	//	echo $value . '<br>';
+	//}}
+
+
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$edit_name = strip_tags(trim($_POST['edit_name']));
@@ -77,9 +88,10 @@
 <body style ="background-color: #84b5dd">
 	<div class="container">
 		<img src="logo1.png" alt="adminer" class="rounded mx-auto d-block" style="margin: 40px auto; padding: 20px;background-color: rgba(0,0,0,0.2);">
-		<?php foreach ($dbh->query($show_tables) as $table): ?>
+		<?php while ($row = $statement->fetch(PDO::FETCH_ASSOC)): ?>
+		<?php foreach ($row as $kay => $table): ?>
 			<div class="block">
-				<h3 class="alert alert-success extremum-click" style="max-width: 25%; margin: 30px auto;">ТАБЛИЦА: <?php echo $table['Tables_in_bushenev']; ?></h3>
+				<h3 class="alert alert-success extremum-click" style="max-width: 25%; margin: 30px auto;">ТАБЛИЦА: <?php echo $table; ?></h3>
 				<div class="table-responsive extremum-slide" style="overflow: hidden; display: none;">
 					<table class="table table-sm table-dark">
 						<thead>
@@ -94,7 +106,7 @@
 							</tr>
 						</thead>
 						<tbody style="color: #000">
-							<?php $show_fields='SHOW COLUMNS FROM ' . $table['Tables_in_bushenev']; ?>
+							<?php $show_fields='SHOW COLUMNS FROM ' . $table; ?>
 							<?php foreach ($dbh->query($show_fields) as $desc): ?>
 							<tr>
 								<td class="table-light"><?= $desc['Field']; ?></td>
@@ -132,6 +144,7 @@
 				</div>
 			</div>
 		<?php endforeach; ?>
+		<?php endwhile; ?>
 		<?php if (isset($command)): ?>
 		<h6 class="alert alert-primary" style="margin:30px 0;">Обработанна команда: <?=array_shift($command); ?></h6>
 		<?php endif; ?>
