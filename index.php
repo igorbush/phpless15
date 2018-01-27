@@ -17,15 +17,9 @@
 	$result = $dbh->query($query);
 
 	$show_tables='SHOW TABLES';
-	//$sql = "SHOW TABLES";
 	$statement = $dbh->prepare($show_tables);
 	$statement->execute();
-	//$row = $statement->fetchall(PDO::FETCH_ASSOC);
-	//print_r($row);
-	//while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-	//foreach($row as $key => $value) {
-	//	echo $value . '<br>';
-	//}}
+
 
 
 
